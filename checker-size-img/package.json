@@ -1,0 +1,22 @@
+{
+  "name": "checker-send",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "multer": "^2.0.2",
+    "sharp": "^0.34.4"
+  }
+}
