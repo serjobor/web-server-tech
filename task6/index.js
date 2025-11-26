@@ -1,9 +1,7 @@
-import express from "express";
-import { createReadStream } from "fs";
-import crypto from "crypto";
-import http from "http";
-import bodyParser from "body-parser";
-import appSrc from "./app.js";
+// app.js
+const fs = require("fs");
+const crypto = require("crypto");
+const http = require("http");
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -119,6 +117,14 @@ function createApp(express, bodyParser, createReadStream, currentFilePath) {
 }
 
 module.exports = { createApp, SYSTEM_LOGIN };
+
+// index.js
+import express from "express";
+import { createReadStream } from "fs";
+import crypto from "crypto";
+import http from "http";
+import bodyParser from "body-parser";
+import appSrc from "./app.js";
 
 const app = appSrc(express, bodyParser, createReadStream, crypto, http);
 
