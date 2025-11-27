@@ -1,8 +1,3 @@
-// app.js
-const fs = require("fs");
-const crypto = require("crypto");
-const http = require("http");
-
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
@@ -22,21 +17,9 @@ function corsMiddleware(req, res, next) {
   next();
 }
 
-/** Чтение файла через поток */
-function readFileAsync(filePath, createReadStream) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    const stream = createReadStream(filePath);
-
-    stream.on("data", (chunk) => chunks.push(chunk));
-    stream.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
-    stream.on("error", (err) => reject(err));
-  });
-}
-
 /** Генерация SHA1 хеша */
 function generateSha1Hash(text) {
-  return crypto.createHash("sha1").update(text).digest("hex");
+  return require("crypto").createHash("sha1").update(text).digest("hex");
 }
 
 /** Чтение данных из HTTP-ответа */
@@ -52,7 +35,7 @@ function readHttpResponse(response) {
 /** Универсальная функция для GET-запроса по URL */
 async function fetchUrlData(url) {
   return new Promise((resolve, reject) => {
-    http.get(url, async (response) => {
+    require("http").get(url, async (response) => {
       try {
         const data = await readHttpResponse(response);
         resolve(data);
@@ -64,7 +47,7 @@ async function fetchUrlData(url) {
 }
 
 /** Создание Express-приложения */
-function createApp(express, bodyParser, createReadStream, currentFilePath) {
+function createApp(express, bodyParser) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -78,8 +61,15 @@ function createApp(express, bodyParser, createReadStream, currentFilePath) {
 
   // Возвращает содержимое текущего файла
   app.get("/code/", async (_req, res) => {
-    const fileContent = await readFileAsync(currentFilePath, createReadStream);
-    res.set(TEXT_PLAIN_HEADER).send(fileContent);
+    try {
+      const fs = require("fs");
+      const path = require("path");
+      const filePath = path.join(__dirname, "app.js");
+      const fileContent = fs.readFileSync(filePath, "utf8");
+      res.set(TEXT_PLAIN_HEADER).send(fileContent);
+    } catch (err) {
+      res.status(500).send("Error reading file");
+    }
   });
 
   // Возвращает SHA1 хеш переданного параметра
