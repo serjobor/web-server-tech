@@ -11,7 +11,7 @@ const sharp = require('sharp');
 const app = express();
 const upload = multer(); // сохраняем в оперативной памяти
 
-const LOGIN = "b8d44289-d86a-471b-9f1d-aceec5c9e948";
+const LOGIN = "serjo4110";
 
 app.get('/login', (req, res) => {
     res.type('text/plain').send(LOGIN);
