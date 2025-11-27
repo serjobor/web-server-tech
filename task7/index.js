@@ -61,8 +61,8 @@ const PORT = 443;
 
 // TODO: Добавьте пути к вашим сертификатам
 const options = {
-  key: fs.readFileSync('/your-key-path/privkey.pem'),
-  cert: fs.readFileSync('/your-cert-path/fullchain.pem')
+  key: fs.readFileSync('/privkey.pem'),
+  cert: fs.readFileSync('/fullchain.pem')
 };
 
 const server = https.createServer(options, app);
