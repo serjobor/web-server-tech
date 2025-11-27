@@ -1,11 +1,12 @@
 {
   "name": "task6",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "vercel dev",
+    "start": "node api/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,10 @@
   },
   "dependencies": {
     "multer": "^2.0.2",
-    "sharp": "^0.34.4"
+    "sharp": "^0.34.4",
+    "@vercel/node": "^2.0.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
