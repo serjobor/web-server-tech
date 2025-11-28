@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient } = require('mongoose');
+const { MongoClient } = require('mongodb');
 
 const app = express();
 
@@ -54,7 +54,7 @@ app.post('/insert/', async (req, res) => {
   }
 });
 
-const PORT = 3000; // Изменили порт на стандартный для HTTP
+const PORT = 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
