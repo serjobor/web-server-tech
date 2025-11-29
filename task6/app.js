@@ -3,24 +3,11 @@ import fs from "fs";
 import crypto from "crypto";
 import http from "http";
 
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-  "Access-Control-Allow-Headers": "*",
-};
-
 const TEXT_PLAIN_HEADER = {
   "Content-Type": "text/plain; charset=utf-8",
 };
 
 export const SYSTEM_LOGIN = "b8d44289-d86a-471b-9f1d-aceec5c9e948";
-
-/** Middleware для CORS */
-function corsMiddleware(req, res, next) {
-  res.set(CORS_HEADERS);
-  if (req.method === "OPTIONS") return res.sendStatus(204);
-  next();
-}
 
 /** Чтение файла через поток */
 function readFileAsync(filePath, createReadStream) {
@@ -64,22 +51,30 @@ async function fetchUrlData(url) {
 }
 
 /** Создание Express-приложения */
-export function createApp(express, bodyParser, createReadStream, currentFilePath) {
+export function createApp(express, bodyParser, createReadStream, crypto, http) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
-  app.use(corsMiddleware);
+
+  // Обработка OPTIONS запросов (просто отвечаем 200)
+  app.options("/*", (req, res) => {
+    res.sendStatus(200);
+  });
 
   // Возвращает системный логин
-  app.get("/login/", (_req, res) => {
+  app.get("/login/", (req, res) => {
     res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
   });
 
   // Возвращает содержимое текущего файла
-  app.get("/code/", async (_req, res) => {
-    const fileContent = await readFileAsync(currentFilePath, createReadStream);
-    res.set(TEXT_PLAIN_HEADER).send(fileContent);
+  app.get("/code/", async (req, res) => {
+    try {
+      const fileContent = await readFileAsync("./app.js", createReadStream);
+      res.set(TEXT_PLAIN_HEADER).send(fileContent);
+    } catch (err) {
+      res.status(500).set(TEXT_PLAIN_HEADER).send("Error reading file");
+    }
   });
 
   // Возвращает SHA1 хеш переданного параметра
@@ -94,7 +89,7 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
       const data = await fetchUrlData(req.query.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
     } catch (err) {
-      res.status(500).send(err.toString());
+      res.status(500).set(TEXT_PLAIN_HEADER).send(err.toString());
     }
   });
 
@@ -104,12 +99,12 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
       const data = await fetchUrlData(req.body.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
     } catch (err) {
-      res.status(500).send(err.toString());
+      res.status(500).set(TEXT_PLAIN_HEADER).send(err.toString());
     }
   });
 
   // Любой другой маршрут возвращает системный логин
-  app.all(/.*/, (_req, res) => {
+  app.all("*", (req, res) => {
     res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
   });
 

@@ -1,3 +1,4 @@
+// index.js
 import express from "express";
 import { createReadStream } from "fs";
 import crypto from "crypto";
@@ -7,8 +8,10 @@ import { createApp } from "./app.js";
 
 const app = createApp(express, bodyParser, createReadStream, crypto, http);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen(PORT);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
 export default app;
