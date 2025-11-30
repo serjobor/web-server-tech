@@ -1,8 +1,6 @@
 import express from 'express';
 import axios from 'axios';
 import pug from 'pug';
-import https from 'https';
-import fs from 'fs';
 
 // TODO: Добавьте ваш логин
 const login = 'b8d44289-d86a-471b-9f1d-aceec5c9e948';
@@ -37,33 +35,30 @@ app.get('/wordpress/wp-json/wp/v2/posts/1', (_, res) => {
 app.use(express.json());
 
 app.post('/render/', async (req, res) => {
-  const { random2, random3 } = req.body;
-  const { addr } = req.query;
+  try {
+    const { random2, random3 } = req.body;
+    const { addr } = req.query;
 
-  const templateResponse = await axios.get(addr);
-  const pugTemplate = templateResponse.data;
+    const templateResponse = await axios.get(addr);
+    const pugTemplate = templateResponse.data;
 
-  const compiled = pug.compile(pugTemplate);
-  const html = compiled({ random2, random3 });
+    const compiled = pug.compile(pugTemplate);
+    const html = compiled({ random2, random3 });
 
-  res.set('Content-Type', 'text/html');
-  res.send(html);
+    res.set('Content-Type', 'text/html');
+    res.send(html);
+  } catch (error) {
+    console.error('Error rendering template:', error);
+    res.status(500).send('Error rendering template');
+  }
 });
 
-// const PORT = 443;
+// Используем стандартный HTTP порт 3000 вместо 443 (HTTPS)
+const PORT = process.env.PORT || 3000;
 
-// // TODO: Добавьте пути к вашим сертификатам
-// const options = {
-//   key: fs.readFileSync('/your-key-path/privkey.pem'),
-//   cert: fs.readFileSync('/your-cert-path/fullchain.pem')
-// };
-
-// const server = https.createServer(options, app);
-
-// server.listen(PORT);
-
-
-const PORT = 3000;
+// Запускаем HTTP сервер вместо HTTPS
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
+
+export default app;
