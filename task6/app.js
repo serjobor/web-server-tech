@@ -6,11 +6,11 @@ import http from "http";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-  "Access-Control-Allow-Headers": "cors,my,Content-Type,Accept,Access-Control-Allow-Headers",
+  "Access-Control-Allow-Headers": "*",
 };
 
 const TEXT_PLAIN_HEADER = {
-  "Content-Type": "text/html; charset=utf-8",
+  "Content-Type": "text/plain; charset=utf-8",
 };
 
 export const SYSTEM_LOGIN = "b8d44289-d86a-471b-9f1d-aceec5c9e948";
