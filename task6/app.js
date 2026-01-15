@@ -88,8 +88,8 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
     res.set(TEXT_PLAIN_HEADER).send(hash);
   });
 
-  // GET /r?addr=<url>
-  app.get("/r", async (req, res) => {
+  // GET /req?addr=<url>
+  app.get("/req", async (req, res) => {
     try {
       const data = await fetchUrlData(req.query.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
@@ -98,8 +98,8 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
     }
   });
 
-  // POST /r с JSON { addr: <url> }
-  app.post("/r", async (req, res) => {
+  // POST /req с JSON { addr: <url> }
+  app.post("/req", async (req, res) => {
     try {
       const data = await fetchUrlData(req.body.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
@@ -109,9 +109,9 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
   });
 
   // Любой другой маршрут возвращает системный логин
-  app.all(/.*/, (_req, res) => {
-    res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
-  });
+  // app.all(/.*/, (_req, res) => {
+    // res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
+  // });
 
   return app;
 }
