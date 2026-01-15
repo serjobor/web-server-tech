@@ -6,7 +6,7 @@ import http from "http";
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET,HEAD,OPTIONS,POST,PUT",
-  "Access-Control-Allow-Headers": "*",
+  "Access-Control-Allow-Headers": "cors,my,Content-Type,Accept,Access-Control-Allow-Headers",
 };
 
 const TEXT_PLAIN_HEADER = {
