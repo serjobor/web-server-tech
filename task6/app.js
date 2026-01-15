@@ -88,8 +88,8 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
     res.set(TEXT_PLAIN_HEADER).send(hash);
   });
 
-  // GET /req/?addr=<url>
-  app.get("/req/", async (req, res) => {
+  // GET /r?addr=<url>
+  app.get("/r", async (req, res) => {
     try {
       const data = await fetchUrlData(req.query.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
@@ -98,8 +98,8 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
     }
   });
 
-  // POST /req/ с JSON { addr: <url> }
-  app.post("/req/", async (req, res) => {
+  // POST /r с JSON { addr: <url> }
+  app.post("/r", async (req, res) => {
     try {
       const data = await fetchUrlData(req.body.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
