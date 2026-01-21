@@ -1,7 +1,7 @@
 // app.js
-import fs from "fs";
-import crypto from "crypto";
-import http from "http";
+const fs = require("fs");
+const crypto = require("crypto");
+const http = require("http");
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -13,7 +13,7 @@ const TEXT_PLAIN_HEADER = {
   "Content-Type": "text/plain; charset=utf-8",
 };
 
-export const SYSTEM_LOGIN = "b8d44289-d86a-471b-9f1d-aceec5c9e948";
+const SYSTEM_LOGIN = "b8d44289-d86a-471b-9f1d-aceec5c9e948";
 
 /** Middleware для CORS */
 function corsMiddleware(req, res, next) {
@@ -64,7 +64,7 @@ async function fetchUrlData(url) {
 }
 
 /** Создание Express-приложения */
-export function createApp(express, bodyParser, createReadStream, currentFilePath) {
+function createApp(express, bodyParser, createReadStream, currentFilePath) {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: false }));
@@ -88,8 +88,8 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
     res.set(TEXT_PLAIN_HEADER).send(hash);
   });
 
-  // GET /req?addr=<url>
-  app.get("/req", async (req, res) => {
+  // GET /req/?addr=<url>
+  app.get("/req/", async (req, res) => {
     try {
       const data = await fetchUrlData(req.query.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
@@ -98,8 +98,8 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
     }
   });
 
-  // POST /req с JSON { addr: <url> }
-  app.post("/req", async (req, res) => {
+  // POST /req/ с JSON { addr: <url> }
+  app.post("/req/", async (req, res) => {
     try {
       const data = await fetchUrlData(req.body.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
@@ -109,9 +109,11 @@ export function createApp(express, bodyParser, createReadStream, currentFilePath
   });
 
   // Любой другой маршрут возвращает системный логин
-  // app.all(/.*/, (_req, res) => {
-    // res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
-  // });
+  app.all(/.*/, (_req, res) => {
+    res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
+  });
 
   return app;
 }
+
+module.exports = { createApp, SYSTEM_LOGIN };

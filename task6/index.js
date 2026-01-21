@@ -1,14 +1,17 @@
-import express from "express";
-import { createReadStream } from "fs";
-import crypto from "crypto";
-import http from "http";
-import bodyParser from "body-parser";
-import { createApp } from "./app.js";
+const express = require("express");
+const { createReadStream } = require("fs");
+const bodyParser = require("body-parser");
 
-const app = createApp(express, bodyParser, createReadStream, crypto, http);
+const { createApp } = require("./app.js");
 
-const PORT = 3000;
+const app = createApp(
+  express,
+  bodyParser,
+  createReadStream,
+  __filename
+);
 
-app.listen(PORT);
-
-export default app;
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log("Server started on port", PORT);
+});
