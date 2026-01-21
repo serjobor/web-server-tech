@@ -117,12 +117,8 @@ function createApp(express, bodyParser, createReadStream, currentFilePath) {
   }
 });
 
-  // Любой другой маршрут возвращает системный логин
-  app.all(/.*/, (_req, res) => {
-    res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
-  });
-
   return app;
 }
+
 
 module.exports = { createApp, SYSTEM_LOGIN };
