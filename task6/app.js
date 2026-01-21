@@ -72,24 +72,24 @@ function createApp(express, bodyParser, createReadStream, currentFilePath) {
   app.use(corsMiddleware);
 
   // Возвращает системный логин
-  app.get("/login", (_req, res) => {
+  app.get("/login/", (_req, res) => {
     res.set(TEXT_PLAIN_HEADER).send(SYSTEM_LOGIN);
   });
 
   // Возвращает содержимое текущего файла
-  app.get("/code", async (_req, res) => {
+  app.get("/code/", async (_req, res) => {
     const fileContent = await readFileAsync(currentFilePath, createReadStream);
     res.set(TEXT_PLAIN_HEADER).send(fileContent);
   });
 
   // Возвращает SHA1 хеш переданного параметра
-  app.get("/sha1/:input", (req, res) => {
+  app.get("/sha1/:input/", (req, res) => {
     const hash = generateSha1Hash(req.params.input);
     res.set(TEXT_PLAIN_HEADER).send(hash);
   });
 
   // GET /req/?addr=<url>
-  app.get("/req", async (req, res) => {
+  app.get("/req/", async (req, res) => {
     try {
       const data = await fetchUrlData(req.query.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
@@ -99,7 +99,7 @@ function createApp(express, bodyParser, createReadStream, currentFilePath) {
   });
 
   // POST /req/ с JSON { addr: <url> }
-  app.post("/req", async (req, res) => {
+  app.post("/req/", async (req, res) => {
     try {
       const data = await fetchUrlData(req.body.addr);
       res.set(TEXT_PLAIN_HEADER).send(data);
